@@ -19,6 +19,15 @@ const getEvents = async () => {
   return JSON.parse(data);
 };
 
+app.post('/__test__/reset', (_, res) => {
+  if (dbName !== 'e2e') {
+    res.status(400).send('잘못된 요청입니다.');
+  }
+
+  fs.writeFileSync(`${__dirname}/src/__mocks__/response/${dbName}`, JSON.stringify({ events: [] }));
+  res.status(200).send('Reset complete');
+});
+
 app.get('/api/events', async (_, res) => {
   const events = await getEvents();
   res.json(events);
