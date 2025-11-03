@@ -1,3 +1,4 @@
+import { Droppable, Draggable } from '@hello-pangea/dnd';
 import {
   Stack,
   Table,
@@ -49,6 +50,7 @@ const MonthView = ({
                 {week.map((day, dayIndex) => {
                   const dateString = day ? formatDate(currentDate, day) : '';
                   const holiday = holidays[dateString];
+                  const eventsForDay = day ? getEventsForDay(filteredEvents, day) : [];
 
                   return (
                     <TableCell
@@ -73,13 +75,43 @@ const MonthView = ({
                               {holiday}
                             </Typography>
                           )}
-                          {getEventsForDay(filteredEvents, day).map((event) => (
-                            <EventBox
-                              key={event.id}
-                              event={event}
-                              isNotified={notifiedEvents.includes(event.id)}
-                            />
-                          ))}
+                          <Droppable droppableId={dateString}>
+                            {(provided, snapshot) => (
+                              <div
+                                ref={provided.innerRef}
+                                {...provided.droppableProps}
+                                style={{
+                                  minHeight: '60px',
+                                  backgroundColor: snapshot.isDraggingOver
+                                    ? '#e3f2fd'
+                                    : 'transparent',
+                                  transition: 'background-color 0.2s',
+                                }}
+                              >
+                                {eventsForDay.map((event, index) => (
+                                  <Draggable key={event.id} draggableId={event.id} index={index}>
+                                    {(provided, snapshot) => (
+                                      <div
+                                        ref={provided.innerRef}
+                                        {...provided.draggableProps}
+                                        {...provided.dragHandleProps}
+                                        style={{
+                                          ...provided.draggableProps.style,
+                                          opacity: snapshot.isDragging ? 0.5 : 1,
+                                        }}
+                                      >
+                                        <EventBox
+                                          event={event}
+                                          isNotified={notifiedEvents.includes(event.id)}
+                                        />
+                                      </div>
+                                    )}
+                                  </Draggable>
+                                ))}
+                                {provided.placeholder}
+                              </div>
+                            )}
+                          </Droppable>
                         </>
                       )}
                     </TableCell>

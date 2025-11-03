@@ -1,3 +1,4 @@
+import { Droppable, Draggable } from '@hello-pangea/dnd';
 import {
   Stack,
   Table,
@@ -39,32 +40,65 @@ const WeekView = ({ currentDate, filteredEvents, notifiedEvents, weekDays }: Wee
           </TableHead>
           <TableBody>
             <TableRow>
-              {weekDates.map((date) => (
-                <TableCell
-                  key={date.toISOString()}
-                  sx={{
-                    height: '120px',
-                    verticalAlign: 'top',
-                    width: '14.28%',
-                    padding: 1,
-                    border: '1px solid #e0e0e0',
-                    overflow: 'hidden',
-                  }}
-                >
-                  <Typography variant="body2" fontWeight="bold">
-                    {date.getDate()}
-                  </Typography>
-                  {filteredEvents
-                    .filter((event) => new Date(event.date).toDateString() === date.toDateString())
-                    .map((event) => (
-                      <EventBox
-                        key={event.id}
-                        event={event}
-                        isNotified={notifiedEvents.includes(event.id)}
-                      />
-                    ))}
-                </TableCell>
-              ))}
+              {weekDates.map((date) => {
+                const dateString = date.toISOString().split('T')[0];
+                const eventsForDay = filteredEvents.filter(
+                  (event) => new Date(event.date).toDateString() === date.toDateString()
+                );
+
+                return (
+                  <TableCell
+                    key={date.toISOString()}
+                    sx={{
+                      height: '120px',
+                      verticalAlign: 'top',
+                      width: '14.28%',
+                      padding: 1,
+                      border: '1px solid #e0e0e0',
+                      overflow: 'hidden',
+                    }}
+                  >
+                    <Typography variant="body2" fontWeight="bold">
+                      {date.getDate()}
+                    </Typography>
+                    <Droppable droppableId={dateString}>
+                      {(provided, snapshot) => (
+                        <div
+                          ref={provided.innerRef}
+                          {...provided.droppableProps}
+                          style={{
+                            minHeight: '80px',
+                            backgroundColor: snapshot.isDraggingOver ? '#e3f2fd' : 'transparent',
+                            transition: 'background-color 0.2s',
+                          }}
+                        >
+                          {eventsForDay.map((event, index) => (
+                            <Draggable key={event.id} draggableId={event.id} index={index}>
+                              {(provided, snapshot) => (
+                                <div
+                                  ref={provided.innerRef}
+                                  {...provided.draggableProps}
+                                  {...provided.dragHandleProps}
+                                  style={{
+                                    ...provided.draggableProps.style,
+                                    opacity: snapshot.isDragging ? 0.5 : 1,
+                                  }}
+                                >
+                                  <EventBox
+                                    event={event}
+                                    isNotified={notifiedEvents.includes(event.id)}
+                                  />
+                                </div>
+                              )}
+                            </Draggable>
+                          ))}
+                          {provided.placeholder}
+                        </div>
+                      )}
+                    </Droppable>
+                  </TableCell>
+                );
+              })}
             </TableRow>
           </TableBody>
         </Table>
