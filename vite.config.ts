@@ -1,6 +1,6 @@
 import react from '@vitejs/plugin-react-swc';
 import { defineConfig } from 'vite';
-import { defineConfig as defineTestConfig, mergeConfig } from 'vitest/config';
+import { defineConfig as defineTestConfig, mergeConfig, configDefaults } from 'vitest/config';
 
 export default mergeConfig(
   defineConfig({
@@ -23,6 +23,7 @@ export default mergeConfig(
         reportsDirectory: './.coverage',
         reporter: ['lcov', 'json', 'json-summary'],
       },
+      exclude: [...configDefaults.exclude, '**/__tests__/e2e/**'],
     },
   })
 );
