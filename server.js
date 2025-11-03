@@ -30,7 +30,7 @@ app.post('/__test__/reset', (_, res) => {
 
 app.post('/__test__/seed', async (_, res) => {
   try {
-    const seedFile = `${__dirname}/src/__mocks__/response/events.json`;
+    const seedFile = `${__dirname}/src/__mocks__/response/seed.json`;
 
     if (!fs.existsSync(seedFile)) {
       return res.status(404).send('Seed file not found');
