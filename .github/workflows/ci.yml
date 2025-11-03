@@ -42,8 +42,14 @@ jobs:
         with:
           node-version: 20
           cache: 'pnpm'
-      - name: test basic
+          
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Install Playwright Browsers
         run: |
-          pnpm install
-          pnpm exec playwright install --with-deps
-          pnpm run test
+          npx playwright install-deps
+          npx playwright install
+
+      - name: Run tests
+        run: pnpm run test
