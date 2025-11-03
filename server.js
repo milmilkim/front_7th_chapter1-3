@@ -28,6 +28,24 @@ app.post('/__test__/reset', (_, res) => {
   res.status(200).send('Reset complete');
 });
 
+app.post('/__test__/seed', async (_, res) => {
+  try {
+    const seedFile = `${__dirname}/src/__mocks__/response/events.json`;
+
+    if (!fs.existsSync(seedFile)) {
+      return res.status(404).send('Seed file not found');
+    }
+
+    const seedData = fs.readFileSync(seedFile, 'utf-8');
+    fs.writeFileSync(`${__dirname}/src/__mocks__/response/${dbName}`, seedData);
+
+    res.status(200).send('Seed applied');
+  } catch (err) {
+    console.error('Seed failed:', err);
+    res.status(500).send('Seed failed');
+  }
+});
+
 app.get('/api/events', async (_, res) => {
   const events = await getEvents();
   res.json(events);

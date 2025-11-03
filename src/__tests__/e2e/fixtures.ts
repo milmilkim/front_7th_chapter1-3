@@ -1,12 +1,16 @@
-// src/__tests__/e2e/fixtures.ts
-import { test as baseTest, request } from '@playwright/test';
+import { test as baseTest, request, APIRequestContext } from '@playwright/test';
 
 type MyFixtures = {
   globalHooks: void;
+  seed: (data?: unknown) => Promise<void>;
+};
+
+const createApiContext = async (): Promise<APIRequestContext> => {
+  return await request.newContext({ baseURL: 'http://localhost:3000' });
 };
 
 const resetDb = async () => {
-  const api = await request.newContext({ baseURL: 'http://localhost:3000' });
+  const api = await createApiContext();
   await api.post('/__test__/reset');
   await api.dispose();
 };
@@ -30,7 +34,6 @@ export const test = baseTest.extend<MyFixtures>({
             }
             globalThis.Date = MockDate;
         }`);
-      await page.goto('/');
 
       await use();
 
@@ -39,6 +42,15 @@ export const test = baseTest.extend<MyFixtures>({
     },
     { auto: true },
   ],
+  // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
+  seed: async ({ page: _page }, provide) => {
+    const api = await createApiContext();
+
+    await provide(async (data) => {
+      await api.post('/__test__/seed', { data });
+    });
+    await api.dispose();
+  },
 });
 
 export { expect } from '@playwright/test';
