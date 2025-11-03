@@ -19,6 +19,7 @@ interface MonthViewProps {
   notifiedEvents: string[];
   holidays: Record<string, string>;
   weekDays: string[];
+  onDateCellClick: (dateString: string) => void;
 }
 
 const MonthView = ({
@@ -27,6 +28,7 @@ const MonthView = ({
   notifiedEvents,
   holidays,
   weekDays,
+  onDateCellClick,
 }: MonthViewProps) => {
   const weeks = getWeeksAtMonth(currentDate);
 
@@ -55,6 +57,7 @@ const MonthView = ({
                   return (
                     <TableCell
                       key={dayIndex}
+                      onClick={() => day && onDateCellClick(dateString)}
                       sx={{
                         height: '120px',
                         verticalAlign: 'top',
@@ -63,6 +66,12 @@ const MonthView = ({
                         border: '1px solid #e0e0e0',
                         overflow: 'hidden',
                         position: 'relative',
+                        cursor: day ? 'pointer' : 'default',
+                        '&:hover': day
+                          ? {
+                              backgroundColor: '#f5f5f5',
+                            }
+                          : {},
                       }}
                     >
                       {day && (

@@ -49,6 +49,7 @@ const EventBox = ({ event, isNotified }: EventBoxProps) => {
 
   return (
     <Box
+      onClick={(e) => e.stopPropagation()}
       sx={{
         ...eventBoxStyles.common,
         ...(isNotified ? eventBoxStyles.notified : eventBoxStyles.normal),

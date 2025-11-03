@@ -19,9 +19,16 @@ interface WeekViewProps {
   filteredEvents: Event[];
   notifiedEvents: string[];
   weekDays: string[];
+  onDateCellClick: (dateString: string) => void;
 }
 
-const WeekView = ({ currentDate, filteredEvents, notifiedEvents, weekDays }: WeekViewProps) => {
+const WeekView = ({
+  currentDate,
+  filteredEvents,
+  notifiedEvents,
+  weekDays,
+  onDateCellClick,
+}: WeekViewProps) => {
   const weekDates = getWeekDates(currentDate);
 
   return (
@@ -49,6 +56,7 @@ const WeekView = ({ currentDate, filteredEvents, notifiedEvents, weekDays }: Wee
                 return (
                   <TableCell
                     key={date.toISOString()}
+                    onClick={() => onDateCellClick(dateString)}
                     sx={{
                       height: '120px',
                       verticalAlign: 'top',
@@ -56,6 +64,10 @@ const WeekView = ({ currentDate, filteredEvents, notifiedEvents, weekDays }: Wee
                       padding: 1,
                       border: '1px solid #e0e0e0',
                       overflow: 'hidden',
+                      cursor: 'pointer',
+                      '&:hover': {
+                        backgroundColor: '#f5f5f5',
+                      },
                     }}
                   >
                     <Typography variant="body2" fontWeight="bold">

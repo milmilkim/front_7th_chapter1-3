@@ -34,6 +34,7 @@ interface CalendarViewProps {
   navigate: (direction: 'prev' | 'next') => void;
   updateEvent: (eventData: Event) => Promise<void>;
   events: Event[];
+  onDateCellClick: (dateString: string) => void;
 }
 
 export default function CalendarView({
@@ -47,6 +48,7 @@ export default function CalendarView({
   navigate,
   updateEvent,
   events,
+  onDateCellClick,
 }: CalendarViewProps) {
   const [isOverlapDialogOpen, setIsOverlapDialogOpen] = useState(false);
   const [overlappingEvents, setOverlappingEvents] = useState<Event[]>([]);
@@ -232,6 +234,7 @@ export default function CalendarView({
               currentDate={currentDate}
               filteredEvents={filteredEvents}
               notifiedEvents={notifiedEvents}
+              onDateCellClick={onDateCellClick}
             />
           )}
           {view === 'month' && (
@@ -241,6 +244,7 @@ export default function CalendarView({
               notifiedEvents={notifiedEvents}
               holidays={holidays}
               weekDays={weekDays}
+              onDateCellClick={onDateCellClick}
             />
           )}
         </Stack>

@@ -151,6 +151,18 @@ function App() {
     }
   };
 
+  const handleDateCellClick = (dateString: string) => {
+    if (editingEvent) {
+      // 수정 중이었을 때 → 수정 상태 해제 + 폼 리셋 + 새 날짜 설정
+      setEditingEvent(null);
+      resetForm();
+      setDate(dateString);
+    } else {
+      // 신규 등록 중일 때 → 날짜만 변경
+      setDate(dateString);
+    }
+  };
+
   const addOrUpdateEvent = async () => {
     if (!title || !date || !startTime || !endTime) {
       enqueueSnackbar('필수 정보를 모두 입력해주세요.', { variant: 'error' });
@@ -270,6 +282,7 @@ function App() {
           navigate={navigate}
           updateEvent={updateEvent}
           events={events}
+          onDateCellClick={handleDateCellClick}
         />
 
         <EventList
