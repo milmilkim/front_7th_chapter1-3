@@ -63,10 +63,8 @@ function App() {
     editEvent,
   } = useEventForm();
 
-  const { events, saveEvent, deleteEvent, createRepeatEvent, fetchEvents } = useEventOperations(
-    Boolean(editingEvent),
-    () => setEditingEvent(null)
-  );
+  const { events, saveEvent, deleteEvent, createRepeatEvent, fetchEvents, setEvents } =
+    useEventOperations(Boolean(editingEvent), () => setEditingEvent(null));
 
   const { handleRecurringEdit, handleRecurringDelete } = useRecurringEventOperations(
     events,
@@ -91,23 +89,30 @@ function App() {
   const { enqueueSnackbar } = useSnackbar();
 
   const handleRecurringConfirm = async (editSingleOnly: boolean) => {
-    if (recurringDialogMode === 'edit' && pendingRecurringEdit) {
-      // 편집 모드 저장하고 편집 폼으로 이동
-      setRecurringEditMode(editSingleOnly);
-      editEvent(pendingRecurringEdit);
-      setIsRecurringDialogOpen(false);
-      setPendingRecurringEdit(null);
-    } else if (recurringDialogMode === 'delete' && pendingRecurringDelete) {
-      // 반복 일정 삭제 처리
-      try {
-        await handleRecurringDelete(pendingRecurringDelete, editSingleOnly);
-        enqueueSnackbar('일정이 삭제되었습니다', { variant: 'success' });
-      } catch (error) {
-        console.error(error);
-        enqueueSnackbar('일정 삭제 실패', { variant: 'error' });
-      }
-      setIsRecurringDialogOpen(false);
-      setPendingRecurringDelete(null);
+    switch (recurringDialogMode) {
+      case 'edit':
+        if (pendingRecurringEdit) {
+          setRecurringEditMode(editSingleOnly);
+          editEvent(pendingRecurringEdit);
+          setIsRecurringDialogOpen(false);
+          setPendingRecurringEdit(null);
+        }
+        break;
+      case 'delete':
+        {
+          if (pendingRecurringDelete) {
+            try {
+              await handleRecurringDelete(pendingRecurringDelete, editSingleOnly);
+              enqueueSnackbar('일정이 삭제되었습니다', { variant: 'success' });
+            } catch (error) {
+              console.error(error);
+              enqueueSnackbar('일정 삭제 실패', { variant: 'error' });
+            }
+            setIsRecurringDialogOpen(false);
+            setPendingRecurringDelete(null);
+          }
+        }
+        break;
     }
   };
 
@@ -137,6 +142,11 @@ function App() {
       // Regular event deletion
       deleteEvent(event.id);
     }
+  };
+
+  const handleUpdateEvent = async (event: Event, newDate: string) => {
+    console.log('updateEvent', event, newDate);
+    // TODO: 업데이트
   };
 
   const addOrUpdateEvent = async () => {
@@ -252,9 +262,11 @@ function App() {
           setView={setView}
           currentDate={currentDate}
           filteredEvents={filteredEvents}
+          setEvents={setEvents}
           notifiedEvents={notifiedEvents}
           holidays={holidays}
           navigate={navigate}
+          onUpdateEvent={handleUpdateEvent}
         />
 
         <EventList

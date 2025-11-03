@@ -13,9 +13,11 @@ interface CalendarViewProps {
   setView: (value: 'week' | 'month') => void;
   currentDate: Date;
   filteredEvents: Event[];
+  setEvents: (events: Event[]) => void;
   notifiedEvents: string[];
   holidays: Record<string, string>;
   navigate: (direction: 'prev' | 'next') => void;
+  onUpdateEvent: (event: Event, newDate: string) => void;
 }
 
 export default function CalendarView({
@@ -23,10 +25,17 @@ export default function CalendarView({
   setView,
   currentDate,
   filteredEvents,
+  setEvents,
   notifiedEvents,
   holidays,
   navigate,
+  onUpdateEvent,
 }: CalendarViewProps) {
+  const updateEvent = (event: Event, from: string, to: string) => {
+    // from, to는 'YYYY-MM-DD' 형식의 날짜 문자열
+    onUpdateEvent(event, to);
+  };
+
   const handleDragEnd = (result: DropResult) => {
     const { source, destination, draggableId } = result;
 
@@ -46,7 +55,18 @@ export default function CalendarView({
       to: destination.droppableId,
     });
 
-    // UI만 작동하도록 실제 업데이트는 하지 않음
+    // 낙관적 업데이트
+    const currentEvent = filteredEvents.find((event) => event.id === draggableId);
+
+    if (!currentEvent) {
+      console.error('Event not found');
+      return;
+    }
+    const newFilteredEvents = filteredEvents.filter((event) => event.id !== draggableId);
+    setEvents([...newFilteredEvents, { ...currentEvent, date: destination.droppableId }]);
+
+    // TODO:
+    updateEvent(currentEvent, source.droppableId, destination.droppableId);
   };
 
   return (
