@@ -1,4 +1,5 @@
 import { DragDropContext, DropResult } from '@hello-pangea/dnd';
+import { Dispatch, SetStateAction } from 'react';
 import { ChevronLeft, ChevronRight } from '@mui/icons-material';
 import { IconButton, MenuItem, Select, Stack, Typography } from '@mui/material';
 
@@ -13,7 +14,7 @@ interface CalendarViewProps {
   setView: (value: 'week' | 'month') => void;
   currentDate: Date;
   filteredEvents: Event[];
-  setEvents: (events: Event[]) => void;
+  setEvents: Dispatch<SetStateAction<Event[]>>;
   notifiedEvents: string[];
   holidays: Record<string, string>;
   navigate: (direction: 'prev' | 'next') => void;
@@ -62,10 +63,19 @@ export default function CalendarView({
       console.error('Event not found');
       return;
     }
-    const newFilteredEvents = filteredEvents.filter((event) => event.id !== draggableId);
-    setEvents([...newFilteredEvents, { ...currentEvent, date: destination.droppableId }]);
+    const updatedEvent = { ...currentEvent, date: destination.droppableId };
+    setEvents((prevEvents) => {
+      let isReplaced = false;
+      const nextEvents = prevEvents.map((event) => {
+        if (event.id === draggableId) {
+          isReplaced = true;
+          return updatedEvent;
+        }
+        return event;
+      });
 
-    // TODO:
+      return isReplaced ? nextEvents : [...prevEvents, updatedEvent];
+    });
     updateEvent(currentEvent, source.droppableId, destination.droppableId);
   };
 
