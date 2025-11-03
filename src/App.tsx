@@ -63,8 +63,15 @@ function App() {
     editEvent,
   } = useEventForm();
 
-  const { events, saveEvent, deleteEvent, createRepeatEvent, fetchEvents, setEvents } =
-    useEventOperations(Boolean(editingEvent), () => setEditingEvent(null));
+  const {
+    events,
+    createEvent,
+    updateEvent,
+    deleteEvent,
+    createRepeatEvent,
+    fetchEvents,
+    setEvents,
+  } = useEventOperations(Boolean(editingEvent), () => setEditingEvent(null));
 
   const { handleRecurringEdit, handleRecurringDelete } = useRecurringEventOperations(
     events,
@@ -144,11 +151,6 @@ function App() {
     }
   };
 
-  const handleUpdateEvent = async (event: Event, newDate: string) => {
-    console.log('updateEvent', event, newDate);
-    // TODO: 업데이트
-  };
-
   const addOrUpdateEvent = async () => {
     if (!title || !date || !startTime || !endTime) {
       enqueueSnackbar('필수 정보를 모두 입력해주세요.', { variant: 'error' });
@@ -198,7 +200,7 @@ function App() {
         await handleRecurringEdit(eventData as Event, recurringEditMode);
         setRecurringEditMode(null);
       } else {
-        await saveEvent(eventData);
+        await updateEvent(eventData as Event);
       }
 
       resetForm();
@@ -219,7 +221,7 @@ function App() {
       return;
     }
 
-    await saveEvent(eventData);
+    await createEvent(eventData);
     resetForm();
   };
 
@@ -266,7 +268,8 @@ function App() {
           notifiedEvents={notifiedEvents}
           holidays={holidays}
           navigate={navigate}
-          onUpdateEvent={handleUpdateEvent}
+          updateEvent={updateEvent}
+          events={events}
         />
 
         <EventList
@@ -294,9 +297,9 @@ function App() {
           <Button onClick={() => setIsOverlapDialogOpen(false)}>취소</Button>
           <Button
             color="error"
-            onClick={() => {
+            onClick={async () => {
               setIsOverlapDialogOpen(false);
-              saveEvent({
+              const eventData = {
                 id: editingEvent ? editingEvent.id : undefined,
                 title,
                 date,
@@ -311,7 +314,13 @@ function App() {
                   endDate: repeatEndDate || undefined,
                 },
                 notificationTime,
-              });
+              };
+
+              if (editingEvent) {
+                await updateEvent(eventData as Event);
+              } else {
+                await createEvent(eventData);
+              }
             }}
           >
             계속 진행

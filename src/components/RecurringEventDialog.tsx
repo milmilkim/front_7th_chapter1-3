@@ -12,7 +12,7 @@ import { Event } from '../types';
 /**
  * Available operation modes for the recurring event dialog
  */
-type DialogMode = 'edit' | 'delete';
+type DialogMode = 'edit' | 'delete' | 'drag';
 
 /**
  * Dialog content configuration for different modes
@@ -25,6 +25,10 @@ const DIALOG_CONFIG = {
   delete: {
     title: '반복 일정 삭제',
     message: '해당 일정만 삭제하시겠어요?',
+  },
+  drag: {
+    title: '반복 일정 이동',
+    message: '해당 일정만 이동하시겠어요?',
   },
 } as const;
 
@@ -67,20 +71,24 @@ const RecurringEventDialog = ({
    * Handles the "Yes" button click - operates on single instance only
    */
   const handleSingleOperation = () => {
-    onConfirm(true); // true = single instance operation
+    const editSingleOnly = true;
+    onConfirm(editSingleOnly); // true = single instance operation
   };
 
   /**
    * Handles the "No" button click - operates on entire series
    */
   const handleSeriesOperation = () => {
-    onConfirm(false); // false = series-wide operation
+    const editSingleOnly = false;
+    onConfirm(editSingleOnly); // false = series-wide operation
   };
 
   // Early return for closed dialog
   if (!open) return null;
 
   const config = DIALOG_CONFIG[mode];
+  // 드래그 모드에서는 "아니요" 버튼 숨김 (반복 일정 전체 날짜 변경 불가)
+  const showNoButton = mode !== 'drag';
 
   return (
     <Dialog
@@ -101,9 +109,11 @@ const RecurringEventDialog = ({
         <Button onClick={onClose} color="inherit">
           {BUTTON_TEXT.cancel}
         </Button>
-        <Button onClick={handleSeriesOperation} variant="outlined" color="primary">
-          {BUTTON_TEXT.no}
-        </Button>
+        {showNoButton && (
+          <Button onClick={handleSeriesOperation} variant="outlined" color="primary">
+            {BUTTON_TEXT.no}
+          </Button>
+        )}
         <Button onClick={handleSingleOperation} variant="contained" color="primary">
           {BUTTON_TEXT.yes}
         </Button>
