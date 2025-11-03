@@ -16,6 +16,20 @@ export const test = baseTest.extend<MyFixtures>({
     async ({ page }, use) => {
       //--- ⬇️ beforeEach 로직 시작 ⬇️ ---//
       await resetDb();
+      const fixed = new Date('2025-11-03T09:00:00Z').getTime();
+
+      await page.addInitScript(`{
+            const fixed = ${fixed};
+            Date.now = () => fixed;
+            const OriginalDate = Date;
+            class MockDate extends OriginalDate {
+                constructor(...args) {
+                if (args.length === 0) super(fixed);
+                else super(...args);
+                }
+            }
+            globalThis.Date = MockDate;
+        }`);
       await page.goto('/');
 
       await use();
