@@ -9,6 +9,7 @@ import {
   Tooltip,
   Typography,
 } from '@mui/material';
+
 import { Event, RepeatType } from '../types';
 
 const notificationOptions = [
@@ -79,9 +80,9 @@ export default function EventList({
                   {notifiedEvents.includes(event.id) && <Notifications color="error" />}
                   {event.repeat.type !== 'none' && (
                     <Tooltip
-                      title={`${event.repeat.interval}${getRepeatTypeLabel(event.repeat.type)}마다 반복${
-                        event.repeat.endDate ? ` (종료: ${event.repeat.endDate})` : ''
-                      }`}
+                      title={`${event.repeat.interval}${getRepeatTypeLabel(
+                        event.repeat.type
+                      )}마다 반복${event.repeat.endDate ? ` (종료: ${event.repeat.endDate})` : ''}`}
                     >
                       <Repeat fontSize="small" />
                     </Tooltip>
@@ -134,4 +135,3 @@ export default function EventList({
     </Stack>
   );
 }
-
