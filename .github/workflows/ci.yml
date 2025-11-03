@@ -45,5 +45,4 @@ jobs:
       - name: test basic
         run: |
           pnpm install
-          pnpm exec playwright install --with-deps
           pnpm run test
