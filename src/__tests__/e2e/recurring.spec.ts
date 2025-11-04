@@ -2,14 +2,6 @@ import { Page } from '@playwright/test';
 
 import { test, expect } from './fixtures';
 
-const createEvent = async (page: Page, title = 'E2E 테스트 일정') => {
-  await page.getByLabel('제목').fill(title);
-  await page.getByLabel('날짜').fill('2025-11-15');
-  await page.getByLabel('시작 시간').fill('10:00');
-  await page.getByLabel('종료 시간').fill('11:00');
-  await page.click('[data-testid="event-submit-button"]');
-};
-
 const createRecurringEvent = async (
   page: Page,
   options: {
