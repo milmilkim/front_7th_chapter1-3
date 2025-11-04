@@ -120,4 +120,4 @@ js.configs.recommended, // Main configuration for source files
       vi: 'readonly',
     },
   },
-}, ...storybook.configs["flat/recommended"]];
+}, ...storybookPlugin.configs["flat/recommended"]];
