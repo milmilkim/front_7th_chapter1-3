@@ -41,4 +41,3 @@ const OverlapDialog = ({ open, onClose, onConfirm, overlappingEvents }: OverlapD
 };
 
 export default OverlapDialog;
-
