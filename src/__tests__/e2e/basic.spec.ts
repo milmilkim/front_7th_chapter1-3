@@ -32,14 +32,6 @@ test.describe('기본 기능 테스트', () => {
     await expect(page.getByTestId('event-list').getByText('기존 회의')).toBeVisible();
   });
 
-  test('등록된 일정이 있으면 이벤트 목록에 일정이 표시된다', async ({ page, seed }) => {
-    await seed();
-
-    await page.goto('/');
-
-    await expect(page.getByTestId('event-list').getByText('기존 회의')).toBeVisible();
-  });
-
   test('주간 뷰에 일정이 있으면 달력에 표시된다', async ({ page, seed }) => {
     await seed();
     await page.goto('/');
