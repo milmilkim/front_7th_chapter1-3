@@ -3,9 +3,6 @@ name: CI Extended
 on:
   push:
     branches:
-      - dev
-  pull_request:
-    branches:
       - main
   workflow_dispatch:
 
@@ -97,4 +94,3 @@ jobs:
         run: pnpm run chromatic
         env:
           CHROMATIC_PROJECT_TOKEN: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
-
