@@ -255,15 +255,18 @@ export default function EventForm({
       )}
 
       <FormControl fullWidth>
-        <FormLabel htmlFor="notification">알림 설정</FormLabel>
+        <FormLabel htmlFor="notification" id="notification-label">
+          알림 설정
+        </FormLabel>
         <Select
           id="notification"
+          aria-labelledby="notification-label"
           size="small"
           value={notificationTime}
           onChange={(e) => setNotificationTime(Number(e.target.value))}
         >
           {notificationOptions.map((option) => (
-            <MenuItem key={option.value} value={option.value}>
+            <MenuItem key={option.value} value={option.value} aria-label={`${option.label}-option`}>
               {option.label}
             </MenuItem>
           ))}
