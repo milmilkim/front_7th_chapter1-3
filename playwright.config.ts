@@ -14,7 +14,7 @@ export default defineConfig({
   retries: process.env.CI ? 2 : 0,
 
   /* CI 환경에서 병렬 워커 설정 */
-  workers: process.env.CI ? 1 : undefined,
+  // workers: process.env.CI ? 1 : undefined,
 
   /* Reporter 설정 */
   reporter: [['html'], ['list']],
@@ -63,6 +63,7 @@ export default defineConfig({
   ],
 
   globalSetup: './global-setup',
+  globalTeardown: './global-teardown',
 
   /* 테스트 실행 전 로컬 dev 서버 시작 */
   webServer: {

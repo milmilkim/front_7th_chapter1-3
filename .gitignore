@@ -9,6 +9,7 @@ node_modules
 /allure-results/
 /.allure/
 e2e.json
+e2e-worker-*.json
 *storybook.log
 src/stories/_sample
 
