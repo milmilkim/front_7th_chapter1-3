@@ -77,7 +77,7 @@ test.describe('알림 시스템 테스트', () => {
   });
 
   test('여러 일정의 알림이 동시에 표시될 수 있다', async ({ page }) => {
-    const testDate = new Date('2024-11-04T09:00:00');
+    const testDate = new Date('2024-11-04T09:40:00');
     await page.clock.install({ time: testDate });
 
     await createEventWithNotification(page, {
@@ -85,20 +85,27 @@ test.describe('알림 시스템 테스트', () => {
       date: '2024-11-04',
       startTime: '10:00',
       endTime: '11:00',
-      notificationTime: 60,
+      notificationTime: 10,
     });
+
+    await page.getByText('일정이 추가되었습니다').waitFor({ timeout: 3000 });
 
     await createEventWithNotification(page, {
       title: '두 번째 회의',
       date: '2024-11-04',
-      startTime: '11:00',
-      endTime: '12:00',
-      notificationTime: 120,
+      startTime: '10:00',
+      endTime: '11:00',
+      notificationTime: 10,
     });
 
-    await page.clock.runFor(1500);
-    await expect(page.getByText('60분 후 첫 번째 회의 일정이 시작됩니다.')).toBeVisible();
-    await expect(page.getByText('120분 후 두 번째 회의 일정이 시작됩니다.')).toBeVisible();
+    await expect(page.getByText('일정 겹침 경고')).toBeVisible();
+    await page.getByRole('button', { name: '계속 진행' }).click();
+    await page.getByText('일정이 추가되었습니다').waitFor({ timeout: 3000 });
+
+    await page.clock.runFor(10 * 60 * 1000 + 1500);
+
+    await expect(page.getByText('10분 후 첫 번째 회의 일정이 시작됩니다.')).toBeVisible();
+    await expect(page.getByText('10분 후 두 번째 회의 일정이 시작됩니다.')).toBeVisible();
   });
 
   test('이미 표시된 알림은 중복으로 표시되지 않는다', async ({ page }) => {
