@@ -212,7 +212,7 @@ export default function CalendarView({
               <ChevronLeft />
             </IconButton>
             <Select
-              size="small"
+              size="medium"
               aria-label="뷰 타입 선택"
               value={view}
               onChange={(e) => setView(e.target.value as 'week' | 'month')}
