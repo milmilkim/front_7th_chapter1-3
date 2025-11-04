@@ -9,7 +9,7 @@ import {
 
 import { Event } from '../types';
 
-interface DeleteConfirmDialogProps {
+export interface DeleteConfirmDialogProps {
   open: boolean;
   onClose: () => void;
   onConfirm: () => void;
@@ -40,5 +40,3 @@ const DeleteConfirmDialog = ({ open, onClose, onConfirm, event }: DeleteConfirmD
 };
 
 export default DeleteConfirmDialog;
-
-

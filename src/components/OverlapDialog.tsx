@@ -10,7 +10,7 @@ import {
 
 import { Event } from '../types';
 
-interface OverlapDialogProps {
+export interface OverlapDialogProps {
   open: boolean;
   onClose: () => void;
   onConfirm: () => void;

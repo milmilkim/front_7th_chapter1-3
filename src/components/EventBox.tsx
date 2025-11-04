@@ -3,7 +3,7 @@ import { Box, Stack, Tooltip, Typography } from '@mui/material';
 
 import { Event, RepeatType } from '../types';
 
-interface EventBoxProps {
+export interface EventBoxProps {
   event: Event;
   isNotified: boolean;
 }

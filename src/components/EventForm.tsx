@@ -26,7 +26,7 @@ const notificationOptions = [
   { value: 1440, label: '1일 전' },
 ];
 
-interface EventFormProps {
+export interface EventFormProps {
   title: string;
   setTitle: (value: string) => void;
   date: string;
