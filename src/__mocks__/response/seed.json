@@ -1,17 +1,37 @@
 {
-    "events": [
-      {
-        "id": "1",
-        "title": "기존 회의",
-        "date": "2025-11-08",
-        "startTime": "09:00",
-        "endTime": "10:00",
-        "description": "기존 팀 미팅",
-        "location": "회의실 B",
-        "category": "업무",
-        "repeat": { "type": "none", "interval": 0 },
-        "notificationTime": 10
-      }
-    ]
-  }
-  
+  "events": [
+    {
+      "id": "1",
+      "title": "기존 회의",
+      "date": "2025-11-08",
+      "startTime": "09:00",
+      "endTime": "10:00",
+      "description": "기존 팀 미팅",
+      "location": "회의실 B",
+      "category": "업무",
+      "repeat": { "type": "none", "interval": 0 }
+    },
+    {
+      "id": "2",
+      "title": "강아지 산책",
+      "date": "2025-11-14",
+      "startTime": "09:00",
+      "endTime": "10:00",
+      "description": "달리기",
+      "location": "공원",
+      "category": "개인",
+      "repeat": { "type": "none", "interval": 0 }
+    },
+    {
+      "id": "3",
+      "title": "잠자기",
+      "date": "2025-12-14",
+      "startTime": "09:00",
+      "endTime": "10:00",
+      "description": "드르렁",
+      "location": "침대",
+      "category": "개인",
+      "repeat": { "type": "none", "interval": 0 }
+    }
+  ]
+}
