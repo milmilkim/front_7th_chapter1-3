@@ -2,7 +2,7 @@ import { test as baseTest, request, APIRequestContext } from '@playwright/test';
 
 type MyFixtures = {
   globalHooks: void;
-  seed: (data?: unknown) => Promise<void>;
+  seed: () => Promise<void>;
 };
 
 const createApiContext = async (workerIndex?: number): Promise<APIRequestContext> => {
@@ -57,12 +57,12 @@ export const test = baseTest.extend<MyFixtures>({
     },
     { auto: true },
   ],
-  // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
-  seed: async ({ page: _page }, provide, testInfo) => {
+  seed: async ({ page }, provide, testInfo) => {
     const api = await createApiContext(testInfo.workerIndex);
 
     await provide(async () => {
       await api.post('/__test__/seed');
+      await page.reload(); // seed 후 자동으로 리프레시
     });
     await api.dispose();
   },

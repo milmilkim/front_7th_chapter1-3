@@ -1,6 +1,11 @@
 name: CI Extended
 
 on:
+  pull_request:
+    types:
+      - synchronize
+      - opened
+      - reopened
   push:
     branches:
       - main

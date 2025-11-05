@@ -10,13 +10,15 @@ export const dragAndDrop = async (page: Page, source: Locator, target: Locator) 
 
   await page.mouse.move(sourceBox.x + sourceBox.width / 2, sourceBox.y + sourceBox.height / 2);
   await page.mouse.down();
+  await page.waitForTimeout(150);
+
+  await page.mouse.move(sourceBox.x + 50, sourceBox.y + 50, { steps: 10 });
   await page.waitForTimeout(100);
 
-  await page.mouse.move(sourceBox.x + 30, sourceBox.y + 30, { steps: 10 });
-  await page.waitForTimeout(50);
-
   await page.mouse.move(targetBox.x + targetBox.width / 2, targetBox.y + targetBox.height / 2, {
-    steps: 20,
+    steps: 30,
   });
+  await page.waitForTimeout(100);
+
   await page.mouse.up();
 };

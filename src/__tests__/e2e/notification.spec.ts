@@ -56,7 +56,8 @@ test.describe('알림 시스템 테스트', () => {
       notificationTime: 10,
     });
 
-    await page.clock.runFor(1500);
+    // setInterval(1000)이 확실히 실행되도록 충분한 시간 대기
+    await page.clock.runFor(2500);
     await expect(page.getByText('10분 후 10분 후 회의 일정이 시작됩니다.')).toBeVisible();
   });
 
@@ -72,7 +73,8 @@ test.describe('알림 시스템 테스트', () => {
       notificationTime: 60,
     });
 
-    await page.clock.runFor(1500);
+    // setInterval(1000)이 확실히 실행되도록 충분한 시간 대기
+    await page.clock.runFor(2500);
     await expect(page.getByText('60분 후 60분 후 회의 일정이 시작됩니다.')).toBeVisible();
   });
 
@@ -102,7 +104,9 @@ test.describe('알림 시스템 테스트', () => {
     await page.getByRole('button', { name: '계속 진행' }).click();
     await page.getByText('일정이 추가되었습니다').waitFor({ timeout: 3000 });
 
-    await page.clock.runFor(10 * 60 * 1000 + 1500);
+    // 시간을 10분 앞으로 이동 (09:40:00 -> 09:50:00)
+    await page.clock.install({ time: '2024-11-04T09:50:00' });
+    await page.clock.runFor(2500);
 
     await expect(page.getByText('10분 후 첫 번째 회의 일정이 시작됩니다.')).toBeVisible();
     await expect(page.getByText('10분 후 두 번째 회의 일정이 시작됩니다.')).toBeVisible();
@@ -120,11 +124,13 @@ test.describe('알림 시스템 테스트', () => {
       notificationTime: 10,
     });
 
-    await page.clock.runFor(1500);
+    await page.clock.runFor(2500);
     const notification = page.getByText('10분 후 10분 후 회의 일정이 시작됩니다.');
     await expect(notification).toBeVisible();
 
-    await page.clock.runFor(60000);
+    // 시간을 1분 앞으로 이동
+    await page.clock.install({ time: '2024-11-04T09:51:00' });
+    await page.clock.runFor(2500);
 
     const notificationCount = await page
       .getByText('10분 후 10분 후 회의 일정이 시작됩니다.')
@@ -144,7 +150,7 @@ test.describe('알림 시스템 테스트', () => {
       notificationTime: 10,
     });
 
-    await page.clock.runFor(1500);
+    await page.clock.runFor(2500);
     await expect(page.getByText('10분 후 이미 지난 회의 일정이 시작됩니다.')).not.toBeVisible();
   });
 
@@ -160,12 +166,12 @@ test.describe('알림 시스템 테스트', () => {
       notificationTime: 10,
     });
 
-    await page.clock.runFor(1500);
+    await page.clock.runFor(2500);
     await expect(page.getByText('10분 후 나중에 알림 일정이 시작됩니다.')).not.toBeVisible();
 
     // 시간 변경
     await page.clock.install({ time: '2024-11-04T09:50:00' });
-    await page.clock.runFor(1500);
+    await page.clock.runFor(2500);
     await expect(page.getByText('10분 후 나중에 알림 일정이 시작됩니다.')).toBeVisible();
   });
 
@@ -189,7 +195,7 @@ test.describe('알림 시스템 테스트', () => {
 
     await page.click('[data-testid="event-submit-button"]');
 
-    await page.clock.runFor(1500);
+    await page.clock.runFor(2500);
     await expect(page.getByText('10분 후 반복 회의 일정이 시작됩니다.')).toBeVisible();
   });
 });

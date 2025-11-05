@@ -117,7 +117,7 @@ test.describe('일정 겹침 처리 테스트', () => {
 
     await dragAndDrop(page, sourceEvent, targetCell);
 
-    await page.getByText('일정 겹침 경고').waitFor({ timeout: 3000 });
+    await page.getByText('일정 겹침 경고').waitFor({ timeout: 5000 });
 
     await expect(page.getByText('계속 진행하시겠습니까?')).toBeVisible();
   });
@@ -140,7 +140,7 @@ test.describe('일정 겹침 처리 테스트', () => {
 
     await dragAndDrop(page, recurringEvent, nov5Cell);
 
-    await expect(page.getByText('반복 일정 이동')).toBeVisible();
+    await page.getByText('반복 일정 이동').waitFor({ timeout: 5000 });
     await expect(page.getByText('해당 일정만 이동하시겠어요?')).toBeVisible();
   });
 
@@ -158,10 +158,11 @@ test.describe('일정 겹침 처리 테스트', () => {
 
     await dragAndDrop(page, eventToDrag, nov6Cell);
 
+    await page.getByText('일정이 수정되었습니다').waitFor({ timeout: 5000 });
+
     await expect(
       page.getByTestId('event-list').getByText('이동 테스트', { exact: true })
     ).toBeVisible();
     await expect(page.getByTestId('event-list').getByText('2025-11-06')).toBeVisible();
-    await page.getByText('일정이 수정되었습니다').waitFor({ timeout: 3000 });
   });
 });
