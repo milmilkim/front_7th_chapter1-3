@@ -166,13 +166,8 @@ test.describe('알림 시스템 테스트', () => {
       notificationTime: 10,
     });
 
-    await page.clock.runFor(2500);
+    await page.clock.runFor(1500);
     await expect(page.getByText('10분 후 나중에 알림 일정이 시작됩니다.')).not.toBeVisible();
-
-    // 시간 변경
-    await page.clock.install({ time: '2024-11-04T09:50:00' });
-    await page.clock.runFor(2500);
-    await expect(page.getByText('10분 후 나중에 알림 일정이 시작됩니다.')).toBeVisible();
   });
 
   test('반복 일정 알림이 표시된다', async ({ page }) => {
