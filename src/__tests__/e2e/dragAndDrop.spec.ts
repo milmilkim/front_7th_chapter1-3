@@ -33,7 +33,7 @@ test.describe('드래그 앤 드롭 E2E 테스트', () => {
     await expect(nov10Cell.getByText('이동할 일정')).toBeVisible();
   });
 
-  test('월간 뷰에서 일반 일정을 다른 날짜로 드래그하면 날짜가 변경된다', async ({ page }) => {
+  test('주간 뷰에서 일반 일정을 다른 날짜로 드래그하면 날짜가 변경된다', async ({ page }) => {
     await page.getByLabel('뷰 타입 선택').getByRole('combobox').click();
     await page.getByRole('option', { name: 'week-option' }).click();
 
